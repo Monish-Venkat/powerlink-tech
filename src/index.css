@@ -1,0 +1,245 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+:root {
+  --background: 230 35% 98%;
+  --foreground: 230 30% 15%;
+
+  --card: 230 35% 98%;
+  --card-foreground: 230 30% 15%;
+
+  --popover: 230 35% 98%;
+  --popover-foreground: 230 30% 15%;
+
+  --primary: 230 30% 15%;
+  --primary-foreground: 230 35% 98%;
+
+  --secondary: 220 90% 55%;
+  --secondary-foreground: 230 35% 98%;
+
+  --muted: 230 35% 96%;
+  --muted-foreground: 230 30% 40%;
+
+  --accent: 190 80% 55%;
+  --accent-foreground: 230 35% 98%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 230 35% 98%;
+
+  --border: 230 30% 90%;
+  --input: 230 30% 90%;
+  --ring: 190 80% 55%;
+
+  --radius: 0.5rem;
+
+  /* Custom Identifiers */
+  --primary-dark: 230 30% 12%;
+  --primary-light: 230 35% 98%;
+  --accent-blue: 190 80% 55%;
+  --primary-black: 230 30% 10%;
+
+  --ups-bg: 220 90% 55%;
+  --ups-text: 230 35% 98%;
+  --cctv-bg: 260 50% 30%;
+  --cctv-text: 230 35% 98%;
+  --solar-bg: 190 80% 45%;
+  --solar-text: 230 35% 98%;
+}
+
+
+  .dark {
+    --background: 220 39% 11%;
+    --foreground: 210 20% 98%;
+
+    --card: 220 39% 11%;
+    --card-foreground: 210 20% 98%;
+
+    --popover: 220 39% 11%;
+    --popover-foreground: 210 20% 98%;
+
+    --primary: 210 20% 98%;
+    --primary-foreground: 220 39% 11%;
+
+    --secondary: 215 50% 20%;
+    --secondary-foreground: 210 20% 98%;
+
+    --muted: 215 50% 20%;
+    --muted-foreground: 210 50% 70%;
+
+    --accent: 217 91% 60%;
+    --accent-foreground: 220 39% 11%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 215 50% 20%;
+    --input: 215 50% 20%;
+    --ring: 217 91% 60%;
+    
+    --sidebar-background: 220 39% 11%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 220 39% 11%;
+    --sidebar-accent: 215 50% 20%;
+    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-border: 215 50% 20%;
+    --sidebar-ring: 217 91% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Controlled utility classes */
+@layer utilities {
+  .bg-primary-dark {
+    background-color: hsl(var(--primary-dark));
+  }
+  
+  .bg-primary-light {
+    background-color: hsl(var(--primary-light));
+  }
+  
+  .bg-accent-blue {
+    background-color: hsl(var(--accent-blue));
+  }
+  
+  .text-primary-dark {
+    color: hsl(var(--primary-dark));
+  }
+  
+  .text-primary-light {
+    color: hsl(var(--primary-light));
+  }
+  
+  .text-accent-blue {
+    color: hsl(var(--accent-blue));
+  }
+
+  .text-primary-black {
+    color: hsl(var(--primary-black));
+  }
+  
+  .border-accent-blue {
+    border-color: hsl(var(--accent-blue));
+  }
+  
+  .bg-ups-section {
+    background-color: hsl(var(--ups-bg));
+  }
+  
+  .text-ups-section {
+    color: hsl(var(--ups-text));
+  }
+  
+  .bg-cctv-section {
+    background-color: hsl(var(--cctv-bg));
+  }
+  
+  .text-cctv-section {
+    color: hsl(var(--cctv-text));
+  }
+  
+  .bg-solar-section {
+  background-color: hsl(var(--ups-bg));
+  }
+  
+  .text-solar-section {
+    color: hsl(var(--solar-text));
+  }
+
+  /* Futuristic effects */
+  .subtle-glow {
+    box-shadow: 0 0 15px rgba(180, 70, 170, 0.2);
+  }
+  
+  .hover-subtle-glow:hover {
+    box-shadow: 0 0 20px rgba(180, 70, 170, 0.3);
+    transform: translateY(-1px);
+    transition: all 0.3s ease;
+  }
+  
+  /* Modern gradients */
+  .clean-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary-dark)) 0%, hsl(var(--accent-blue)) 70%, hsl(var(--ups-bg)) 100%);
+  }
+
+  /* Executive gradient */
+  .executive-gradient {
+    background: linear-gradient(to right, hsl(var(--accent-blue)), hsl(190 80% 40%));
+  }
+  
+  /* Futuristic shadow */
+  .professional-shadow {
+    box-shadow: 0 4px 20px rgba(100, 60, 180, 0.15), 0 2px 10px rgba(180, 70, 170, 0.1);
+  }
+  
+  /* Subtle hover scale */
+  .hover-scale:hover {
+    transform: scale(1.03);
+    transition: all 0.3s ease;
+  }
+  
+  /* Neon border effect */
+  .neon-border {
+    border: 1px solid transparent;
+    background-clip: padding-box, border-box;
+    background-origin: padding-box, border-box;
+    background-image: 
+      linear-gradient(to bottom, hsl(var(--background)), hsl(var(--background))), 
+      linear-gradient(90deg, hsl(320, 70%, 55%), hsl(260, 80%, 50%), hsl(190, 80%, 40%));
+    box-shadow: 0 0 10px rgba(180, 70, 170, 0.15);
+  }
+  
+  /* Gradient text - futuristic */
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(320, 70%, 55%), hsl(260, 80%, 50%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Controlled animations */
+  @keyframes gentle-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  
+  .animate-gentle-float {
+    animation: gentle-float 4s ease-in-out infinite;
+  }
+  
+  @keyframes subtle-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+  
+  .animate-subtle-pulse {
+    animation: subtle-pulse 3s ease-in-out infinite;
+  }
+  
+  /* Clean border style */
+  .clean-border {
+    border: 1px solid hsl(var(--accent-blue));
+  }
+  
+  /* Futuristic divider */
+  .futuristic-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, hsl(var(--accent-blue)), transparent);
+  }
+}
