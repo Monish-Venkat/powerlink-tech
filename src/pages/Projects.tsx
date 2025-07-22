@@ -16,9 +16,9 @@ const Projects = () => {
       category: "ups",
       description: "Complete UPS backup solution for Dental Clinic",
       images: [
-        'src/prj/ups/u1.jpg',
-        'src/prj/ups/u2.jpg',
-        'src/prj/ups/u3.jpg'
+        'public/prj/ups/u1.jpg',
+        'public/prj/ups/u2.jpg',
+        'public/prj/ups/u3.jpg'
       ],
       location: "Dr. Nopain Dental,Kadugodi Bangalore",
       year: "2025"
@@ -29,9 +29,9 @@ const Projects = () => {
       category: "solar",
       description: "5KW solar panel installation with battery backup system",
       images: [
-        'src/prj/solar/s1.jpg',
-        'src/prj/solar/s2.jpg',
-        'src/prj/solar/s3.jpg',
+        'public/prj/solar/s1.jpg',
+        'public/prj/solar/s2.jpg',
+        'public/prj/solar/s3.jpg',
         
         
       ],
@@ -44,8 +44,8 @@ const Projects = () => {
       category: "ups",
       description: "High-capacity UPS system with battery bank for Dental Clinic",
       images: [
-        "src/prj/ups/u6.jpg",
-        "src/prj/ups/u7.jpg"
+        "public/prj/ups/u6.jpg",
+        "public/prj/ups/u7.jpg"
       ],
       location: "Narsapura,Karnataka",
       year: "2024"
@@ -56,8 +56,8 @@ const Projects = () => {
       category: "solar",
       description: "Solar-powered Water Heater",
       images: [
-        'src/prj/solar/s4.jpg',
-        'src/prj/solar/s5.jpg'
+        'public/prj/solar/s4.jpg',
+        'public/prj/solar/s5.jpg'
       ],
       location: "Narsapura,Karnataka",
       year: "2024"
