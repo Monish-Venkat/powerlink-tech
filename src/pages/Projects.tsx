@@ -10,60 +10,58 @@ const Projects = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   const projects = [
-    {
-      id: 1,
-      title: "Commercial UPS Installation - Dental Clinic",
-      category: "ups",
-      description: "Complete UPS backup solution for Dental Clinic",
-      images: [
-        'public/prj/ups/u1.jpg',
-        'public/prj/ups/u2.jpg',
-        'public/prj/ups/u3.jpg'
-      ],
-      location: "Dr. Nopain Dental,Kadugodi Bangalore",
-      year: "2025"
-    },
-    {
-      id: 2,
-      title: "Residential Solar Installation",
-      category: "solar",
-      description: "5KW solar panel installation with battery backup system",
-      images: [
-        'public/prj/solar/s1.jpg',
-        'public/prj/solar/s2.jpg',
-        'public/prj/solar/s3.jpg',
-        
-        
-      ],
-      location: "Ramamurthy Nagar, Bangalore",
-      year: "2024"
-    },
-    {
-      id: 4,
-      title: "Commercial UPS Installation - Dental Clinic",
-      category: "ups",
-      description: "High-capacity UPS system with battery bank for Dental Clinic",
-      images: [
-        "public/prj/ups/u6.jpg",
-        "public/prj/ups/u7.jpg"
-      ],
-      location: "Narsapura,Karnataka",
-      year: "2024"
-    },
-    {
-      id: 5,
-      title: "Solar Water Heater",
-      category: "solar",
-      description: "Solar-powered Water Heater",
-      images: [
-        'public/prj/solar/s4.jpg',
-        'public/prj/solar/s5.jpg'
-      ],
-      location: "Narsapura,Karnataka",
-      year: "2024"
-    }
+  {
+    id: 1,
+    title: "Commercial UPS Installation - Dental Clinic",
+    category: "ups",
+    description: "Complete UPS backup solution for Dental Clinic",
+    images: [
+      '/prj/ups/u1.jpg',
+      '/prj/ups/u2.jpg',
+      '/prj/ups/u3.jpg'
+    ],
+    location: "Dr. Nopain Dental, Kadugodi Bangalore",
+    year: "2025"
+  },
+  {
+    id: 2,
+    title: "Residential Solar Installation",
+    category: "solar",
+    description: "5KW solar panel installation with battery backup system",
+    images: [
+      '/prj/solar/s1.jpg',
+      '/prj/solar/s2.jpg',
+      '/prj/solar/s3.jpg'
+    ],
+    location: "Ramamurthy Nagar, Bangalore",
+    year: "2024"
+  },
+  {
+    id: 4,
+    title: "Commercial UPS Installation - Dental Clinic",
+    category: "ups",
+    description: "High-capacity UPS system with battery bank for Dental Clinic",
+    images: [
+      '/prj/ups/u6.jpg',
+      '/prj/ups/u7.jpg'
+    ],
+    location: "Narsapura, Karnataka",
+    year: "2024"
+  },
+  {
+    id: 5,
+    title: "Solar Water Heater",
+    category: "solar",
+    description: "Solar-powered Water Heater",
+    images: [
+      '/prj/solar/s4.jpg',
+      '/prj/solar/s5.jpg'
+    ],
+    location: "Narsapura, Karnataka",
+    year: "2024"
+  }
+];
 
-  ];
 
   const categories = [
     { id: 'all', name: 'All Projects', color: 'bg-primary-dark' },
