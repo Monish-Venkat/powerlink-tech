@@ -90,8 +90,7 @@ const Index = () => {
             Power Solutions for <span className="gradient-text">Every Need</span>
           </h2>
           <p className="text-xl text-primary-light/90 mb-8 max-w-3xl mx-auto">
-            Leading provider of UPS systems, batteries, CCTV cameras, and solar solutions.
-            Trusted by customers since 2008 with premium brands like Luminous, Exide, Livfast, and Hikvision.
+            Power Link Technologies has been a trusted name since 2008, delivering reliable power backup and security solutions. We specialize in high-quality UPS systems, batteries, CCTV surveillance, and solar energy products—partnering with top brands like Luminous, Exide, Livfast, and Hikvision to ensure performance and peace of mind.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button
