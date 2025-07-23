@@ -124,7 +124,7 @@ const Index = () => {
               <Zap className="w-10 h-10 text-accent-blue mr-3" />
               <h2 className="text-3xl font-bold text-ups-section">UPS & Inverters</h2>
             </div>
-            <p className="text-lg text-ups-section/80 max-w-2xl mx-auto ">
+            <p className="text-lg text-ups-section/80 max-w-2xl mx-auto text-white">
               Reliable power backup solutions from trusted brands to keep your home and business running smoothly.
             </p>
           </div>
@@ -149,7 +149,7 @@ const Index = () => {
               <Shield className="w-10 h-10 text-primary-light mr-3" />
               <h2 className="text-3xl font-bold text-cctv-section">CCTV Security Systems</h2>
             </div>
-            <p className="text-lg text-cctv-section/80 max-w-2xl mx-auto">
+            <p className="text-lg text-cctv-section/80 max-w-2xl mx-auto text-white">
               Advanced security solutions with Hikvision technology to protect what matters most to you.
             </p>
           </div>
@@ -174,7 +174,7 @@ const Index = () => {
               <Sun className="w-10 h-10 text-primary-light mr-3" />
               <h2 className="text-3xl font-bold text-solar-section">Solar Solutions</h2>
             </div>
-            <p className="text-lg text-solar-section/80 max-w-2xl mx-auto">
+            <p className="text-lg text-solar-section/80 max-w-2xl mx-auto text-white">
               Harness the power of the sun with our premium Luminous solar panels and inverters for sustainable energy.
             </p>
           </div>
