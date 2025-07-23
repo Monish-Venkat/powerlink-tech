@@ -57,7 +57,7 @@ const About = () => {
             About <span className="text-accent-blue">Power Link Technologies</span>
           </h2>
           <p className="text-xl mb-8 max-w-3xl mx-auto">
-            Established in 2008 by visionary entrepreneur Venkatesan K, PowerLink Technologies has been at the forefront of power solutions and security systems for over 15 years.
+            Established in 2008 by visionary entrepreneur Venkatesan K, Power Link Technologies has been at the forefront of power solutions and security systems for over 15 years.
           </p>
         </div>
       </section>
@@ -69,7 +69,7 @@ const About = () => {
             <div>
               <h3 className="text-3xl font-bold text-primary-dark mb-6">Our Story</h3>
               <p className="text-primary-dark/70 mb-6 leading-relaxed">
-                Founded with a vision to provide reliable power solutions to homes and businesses across Bangalore, PowerLink Technologies began its journey in 2008. Under the leadership of Venkatesan K, we started as a small enterprise focusing on UPS systems and batteries.
+                Founded with a vision to provide reliable power solutions to homes and businesses across Bangalore, Power Link Technologies began its journey in 2008. Under the leadership of Venkatesan K, we started as a small enterprise focusing on UPS systems and batteries.
               </p>
               <p className="text-primary-dark/70 mb-6 leading-relaxed">
                 Over the years, we have expanded our expertise to include CCTV security systems and solar energy solutions, always staying ahead of technological advancements and customer needs.
