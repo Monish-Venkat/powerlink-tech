@@ -15,9 +15,6 @@ All colors MUST be HSL.
   --card: 230 35% 98%;
   --card-foreground: 230 30% 15%;
 
-  --popover: 230 35% 98%;
-  --popover-foreground: 230 30% 15%;
-
   --primary: 230 30% 15%;
   --primary-foreground: 230 35% 98%;
 
@@ -37,14 +34,12 @@ All colors MUST be HSL.
   --input: 230 30% 90%;
   --ring: 190 80% 55%;
 
-  --radius: 0.5rem;
-
-  /* Custom Identifiers */
-  --primary-dark: 230 30% 12%;
+  /* Section-specific */
+  --primary-dark: 230 30% 12%; 
   --primary-light: 230 35% 98%;
   --accent-blue: 190 80% 55%;
   --primary-black: 230 30% 10%;
-
+  
   --ups-bg: 220 90% 55%;
   --ups-text: 230 35% 98%;
   --cctv-bg: 260 50% 30%;
