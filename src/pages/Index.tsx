@@ -142,13 +142,13 @@ const Index = () => {
 
   const cctvProducts = [
     { name: 'Hikvision CCTV Cameras', brand: 'Hikvision', category: 'CCTV Security', image: 'https://duocall.co.uk/wp-content/uploads/hikvision-cctv-and-security-2.png', features: ['4K Resolution', 'Night Vision', 'Motion Detection'] },
-    { name: 'Hikvision NVR Systems', brand: 'Hikvision', category: 'CCTV Security', image: 'https://www.hikvisionindia.com/storage/app/uploads/public/61f/79c/62c/61f79c62c45a7977436214.jpg', features: ['8 Channel', 'Remote Access', '4TB Storage'] },
+    { name: 'Hikvision NVR Systems', brand: 'Hikvision', category: 'CCTV Security', image: 'https://cpimg.tistatic.com/09109793/b/4/Hikvision-16-Channel-NVR.jpg', features: ['8 Channel', 'Remote Access', '4TB Storage'] },
     { name: 'Hikvision DVR Systems', brand: 'Hikvision', category: 'CCTV Security', image: 'https://5.imimg.com/data5/SELLER/Default/2021/3/QY/FV/EY/23495999/hikvision-hd-series-ds-7a04hqhi-k1-1080p-2mp-4-channel-mini-turbo-dvr-white--500x500.jpg', features: ['HD Recording', 'Mobile View', 'Easy Setup'] },
   ];
 
   const solarProducts = [
     { name: 'Luminous Solar Panels', brand: 'Luminous', category: 'Solar Solutions', image: 'https://m.media-amazon.com/images/I/510tdXusMcL.jpg', features: ['High Efficiency', '25 Year Warranty', 'Monocrystalline'] },
-    { name: 'Luminous Solar Inverters', brand: 'Luminous', category: 'Solar Solutions', image: 'https://solarmartindia.com/wp-content/uploads/2025/03/Untitled-design-57.png', features: ['MPPT Technology', 'WiFi Enabled', 'Smart Grid'] },
+    { name: 'Luminous Solar Inverters', brand: 'Luminous', category: 'Solar Solutions', image: 'https://solutions.luminousindia.com/static/edge/public/styles/webp_image/azblob/2026-05/8ba4a4d8-6ad5-4f23-81fd-4386478566f0.jpg.webp?itok=ODxaNR4R', features: ['MPPT Technology', 'WiFi Enabled', 'Smart Grid'] },
     { name: 'Luminous Solar Batteries', brand: 'Luminous', category: 'Solar Solutions', image: 'https://5.imimg.com/data5/SELLER/Default/2021/3/QP/CS/DR/65602637/luminous-solar-battery-12v-20ah-lpt-1220h-1000x1000.png', features: ['Deep Cycle', 'C10 Rated', 'Tubular Technology'] },
   ];
 

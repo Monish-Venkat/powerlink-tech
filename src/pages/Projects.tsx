@@ -107,7 +107,7 @@ const Projects = () => {
                 <h1 className="text-2xl font-bold text-primary-light bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
                   PowerLink Technologies
                 </h1>
-                <p className="text-sm text-primary-white flex items-center gap-1">
+                <p className="text-sm text-primary-light flex items-center gap-1">
                   <Sparkles className="w-3 h-3 animate-pulse" />
                   Our Projects Gallery
                 </p>

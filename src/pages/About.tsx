@@ -226,7 +226,7 @@ const About = () => {
               size="lg"
               variant="outline"
               className="border-2 border-accent-blue text-accent-blue hover:bg-accent-blue hover:text-primary-light px-10 py-6 rounded-2xl hover-scale font-semibold shadow-lg"
-              onClick={() => window.location.href = '/projects'}
+              onClick={() => window.location.href = '/Projects.tsx'}
             >
               View Our Projects
             </Button>
