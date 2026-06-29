@@ -507,7 +507,7 @@ const Index = () => {
                 title: 'Email', 
                 value: 'info@powerlinktechnologies.in', 
                 action: 'Tap to send email',
-                href: `mailto:info@powerlinktechnologies.com?subject=${encodeURIComponent('Inquiry from Website')}&body=${encodeURIComponent('Hello PowerLink Technologies,\n\nI am interested in your products and services.\n\nThank you.')}`,
+                href: `mailto:info@powerlinktechnologies.in?subject=${encodeURIComponent('Inquiry from Website')}&body=${encodeURIComponent('Hello PowerLink Technologies,\n\nI am interested in your products and services.\n\nThank you.')}`,
                 color: 'from-blue-400 to-cyan-500'
               },
               { 
