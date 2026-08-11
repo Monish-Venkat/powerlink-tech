@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-06T00:00:00.000Z",
+  "title": "Design System: PowerLink Technologies",
+  "extensions": {
+    "colorMeta": {
+      "primary-dark": { "role": "neutral", "displayName": "Deep Teal", "canonical": "oklch(22.7% 0.035 233.0)", "tonalRamp": ["oklch(28.8% 0.049 233.9)", "oklch(41.6% 0.076 235.0)", "oklch(53.5% 0.101 235.5)", "oklch(64.7% 0.124 235.8)", "oklch(72.2% 0.105 232.5)", "oklch(80.0% 0.077 230.6)", "oklch(88.1% 0.046 229.6)", "oklch(96.4% 0.014 228.9)"] },
+      "primary-light": { "role": "neutral", "displayName": "Cloud White", "canonical": "oklch(98.0% 0.004 191.2)", "tonalRamp": ["oklch(28.9% 0.022 189.5)", "oklch(41.5% 0.036 189.3)", "oklch(53.3% 0.048 189.2)", "oklch(64.4% 0.059 189.1)", "oklch(72.7% 0.047 189.8)", "oklch(80.8% 0.034 190.3)", "oklch(88.7% 0.020 190.8)", "oklch(96.6% 0.006 191.1)"] },
+      "primary-black": { "role": "neutral", "displayName": "Near Black", "canonical": "oklch(18.9% 0.026 231.5)", "tonalRamp": ["oklch(28.6% 0.047 233.6)", "oklch(41.4% 0.073 234.5)", "oklch(53.2% 0.097 235.0)", "oklch(64.3% 0.120 235.3)", "oklch(72.0% 0.101 232.3)", "oklch(79.9% 0.073 230.5)", "oklch(88.0% 0.044 229.5)", "oklch(96.3% 0.013 228.9)"] },
+      "accent-blue": { "role": "primary", "displayName": "Trust Teal", "canonical": "oklch(65.6% 0.111 184.1)", "tonalRamp": ["oklch(34.3% 0.055 184.9)", "oklch(50.4% 0.084 184.4)", "oklch(65.4% 0.111 184.1)", "oklch(79.6% 0.136 184.0)", "oklch(83.5% 0.124 185.7)", "oklch(87.5% 0.097 187.2)", "oklch(92.3% 0.061 188.5)", "oklch(97.5% 0.019 189.6)"] },
+      "accent-cyan": { "role": "secondary", "displayName": "Cyan Teal", "canonical": "oklch(73.6% 0.123 207.3)", "tonalRamp": ["oklch(33.5% 0.053 206.4)", "oklch(49.2% 0.081 206.9)", "oklch(63.7% 0.106 207.2)", "oklch(77.4% 0.129 207.4)", "oklch(81.8% 0.120 205.7)", "oklch(86.3% 0.095 204.9)", "oklch(91.5% 0.060 204.7)", "oklch(97.3% 0.019 204.9)"] },
+      "accent-amber": { "role": "tertiary", "displayName": "Copper", "canonical": "oklch(63.4% 0.169 45.2)", "tonalRamp": ["oklch(28.6% 0.067 47.6)", "oklch(41.4% 0.105 46.3)", "oklch(53.3% 0.140 45.6)", "oklch(64.6% 0.173 45.2)", "oklch(71.6% 0.141 49.1)", "oklch(79.3% 0.099 50.9)", "oklch(87.6% 0.057 51.8)", "oklch(96.2% 0.017 52.3)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display (Space Grotesk)", "purpose": "Page-level hero H1/H2 headlines, section H2s, card titles, stat numerals." },
+      "body": { "displayName": "Body (Inter)", "purpose": "All paragraph copy and UI text; the global font-sans default." },
+      "label": { "displayName": "Label", "purpose": "Small metadata only (brand names on product cards) - no longer used as a heading kicker." }
+    },
+    "shadows": [
+      { "name": "card-rest", "value": "0 2px 8px rgba(0,0,0,0.05), 0 8px 24px rgba(0,0,0,0.08)", "purpose": "Default resting elevation for white cards on light sections." },
+      { "name": "card-hover-glow", "value": "0 0 30px hsl(174 72% 38% / 0.4), 0 0 60px hsl(174 72% 38% / 0.2), 0 8px 24px rgba(0,0,0,0.15)", "purpose": "Interactive card hover - colored glow + lift, not a plain drop shadow." },
+      { "name": "executive-shadow", "value": "0 4px 20px hsl(200 65% 10% / 0.2), 0 8px 40px hsl(174 72% 38% / 0.15)", "purpose": "Hero primary CTA button shadow." }
+    ],
+    "motion": [
+      { "name": "spring-scale", "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "purpose": "Small tactile control feedback only (button hover/active) - never for section- or panel-level entrances." },
+      { "name": "confident", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "The system's entrance curve: hero cascade, chatbot panel open. Confident arrival, no overshoot. Tailwind token: ease-confident." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "2xl", "value": "1400px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main CTA - animated teal-to-cyan-teal gradient with a radial top highlight.",
+      "html": "<button class=\"ds-btn-primary\">Explore Products</button>",
+      "css": ".ds-btn-primary { position: relative; overflow: hidden; background: linear-gradient(135deg, oklch(50.4% 0.084 184.4), oklch(65.4% 0.111 184.1), oklch(77.4% 0.129 207.4)); background-size: 200% 200%; animation: ds-gradient-shift 8s ease infinite; color: #fff; font-family: 'Space Grotesk', sans-serif; font-weight: 700; padding: 20px 32px; border-radius: 16px; border: none; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); } .ds-btn-primary::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.2) 0%, transparent 60%); pointer-events: none; } .ds-btn-primary:hover { transform: scale(1.04); } .ds-btn-primary:active { transform: scale(0.96); } .ds-btn-primary:focus-visible { outline: 2px solid oklch(65.6% 0.111 184.1); outline-offset: 3px; } @keyframes ds-gradient-shift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary CTA - transparent with a teal border, fills solid on hover.",
+      "html": "<button class=\"ds-btn-outline\">Contact Us</button>",
+      "css": ".ds-btn-outline { background: transparent; color: oklch(65.6% 0.111 184.1); border: 2px solid oklch(65.6% 0.111 184.1); font-family: 'Space Grotesk', sans-serif; font-weight: 600; padding: 20px 32px; border-radius: 16px; transition: background 0.3s, color 0.3s, transform 0.4s cubic-bezier(0.34,1.56,0.64,1); } .ds-btn-outline:hover { background: oklch(65.6% 0.111 184.1); color: #fff; transform: scale(1.04); } .ds-btn-outline:focus-visible { outline: 2px solid oklch(65.6% 0.111 184.1); outline-offset: 3px; }"
+    },
+    {
+      "name": "Outline Chip (quick-reply / filter)",
+      "kind": "chip",
+      "refersTo": "chip-outline",
+      "description": "Interactive pill control - outline at rest, fills solid teal on hover. Used for chatbot quick replies and category filters.",
+      "html": "<button class=\"ds-chip\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M13 2 3 14h9l-1 8 10-12h-9l1-8z\"/></svg>UPS Systems</button>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; padding: 6px 12px; border-radius: 9999px; border: 1px solid hsl(174 72% 38% / 0.3); color: hsl(174 72% 38%); background: hsl(174 72% 38% / 0.05); transition: background-color 0.2s, color 0.2s; } .ds-chip:hover { background: hsl(174 72% 38%); color: #fff; } .ds-chip:focus-visible { outline: 2px solid hsl(174 72% 38%); outline-offset: 2px; }"
+    },
+    {
+      "name": "Product Card",
+      "kind": "card",
+      "refersTo": "card-product",
+      "description": "Canonical product card - white surface, gradient category tag floating on the image, teal-tinted border and glow on hover.",
+      "html": "<div class=\"ds-card-product\"><div class=\"ds-card-product__tag\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M13 2 3 14h9l-1 8 10-12h-9l1-8z\"/></svg>UPS &amp; Inverters</div><div class=\"ds-card-product__body\"><h3 class=\"ds-card-product__title\">Luminous UPS Systems</h3><button class=\"ds-btn-primary\" style=\"width:100%;padding:14px 24px;\">Get Instant Quote</button></div></div>",
+      "css": ".ds-card-product { background: #fff; border: 1px solid hsl(174 72% 38% / 0.2); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); overflow: hidden; transition: box-shadow 0.4s cubic-bezier(0.34,1.56,0.64,1), transform 0.4s cubic-bezier(0.34,1.56,0.64,1); } .ds-card-product:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 0 30px hsl(174 72% 38% / 0.4), 0 0 60px hsl(174 72% 38% / 0.2), 0 8px 24px rgba(0,0,0,0.15); } .ds-card-product__tag { display: inline-flex; align-items: center; gap: 8px; margin: 24px; padding: 8px 16px; border-radius: 16px; background: linear-gradient(90deg, hsl(174 72% 38%), hsl(174 72% 40% / 0.8)); color: #fff; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; } .ds-card-product__body { padding: 32px; padding-top: 0; } .ds-card-product__title { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: hsl(200 65% 10%); margin: 0 0 24px; line-height: 1.3; }"
+    },
+    {
+      "name": "Chat Bubble (bot / user)",
+      "kind": "custom",
+      "refersTo": "chat-bubble",
+      "description": "Signature component: message bubbles with an asymmetric corner pointing toward the sender, like a real chat thread.",
+      "html": "<div class=\"ds-chat\"><div class=\"ds-chat__bubble ds-chat__bubble--bot\">Ask me about UPS, solar, CCTV, or quotes.</div><div class=\"ds-chat__bubble ds-chat__bubble--user\">Tell me about solar panels</div></div>",
+      "css": ".ds-chat { display: flex; flex-direction: column; gap: 12px; } .ds-chat__bubble { max-width: 85%; padding: 12px 16px; font-size: 14px; line-height: 1.6; box-shadow: 0 1px 2px rgba(0,0,0,0.05); } .ds-chat__bubble--bot { align-self: flex-start; background: #fff; border: 1px solid hsl(174 72% 38% / 0.15); color: hsl(200 65% 10%); border-radius: 16px 16px 16px 6px; } .ds-chat__bubble--user { align-self: flex-end; background: linear-gradient(135deg, hsl(174 72% 32%), hsl(174 72% 38%), hsl(186 78% 46%)); color: #fff; border-radius: 16px 16px 6px 16px; }"
+    },
+    {
+      "name": "Section Heading (Fused Icon)",
+      "kind": "custom",
+      "refersTo": "section-header",
+      "description": "The recurring section-opening pattern: icon badge centered above a bold H2. Replaced an earlier separate uppercase 'eyebrow' text label - the icon and heading now read as one unit at every viewport width, including when the heading wraps to multiple lines on mobile. Copper variant for energy/solar sections.",
+      "html": "<div class=\"ds-section-header\"><div class=\"ds-section-header__icon\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M13 2 3 14h9l-1 8 10-12h-9l1-8z\"/></svg></div><h2 class=\"ds-section-header__title\">UPS, Inverters &amp; Batteries</h2></div>",
+      "css": ".ds-section-header { text-align: center; } .ds-section-header__icon { width: 48px; height: 48px; margin: 0 auto 16px; border-radius: 16px; display: flex; align-items: center; justify-content: center; background: hsl(174 72% 38% / 0.1); color: hsl(174 72% 38%); } .ds-section-header__title { font-family: 'Space Grotesk', sans-serif; font-size: 30px; font-weight: 700; color: hsl(200 65% 10%); margin: 0; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Chatbot message input - overrides the shadcn default rounding with the project's standard rounded-xl.",
+      "html": "<input class=\"ds-input\" placeholder=\"Ask about UPS, solar, CCTV, quotes...\" />",
+      "css": ".ds-input { width: 100%; height: 44px; padding: 0 16px; font-size: 14px; background: hsl(175 22% 97%); border: 1px solid hsl(200 65% 10% / 0.15); border-radius: 12px; color: hsl(200 65% 10%); } .ds-input::placeholder { color: hsl(200 65% 10% / 0.4); } .ds-input:focus-visible { outline: none; border-color: hsl(174 72% 38%); box-shadow: 0 0 0 1px hsl(174 72% 38% / 0.4); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Trusted Local Authority",
+    "overview": "PowerLink is a family power-and-security business, not a marketplace - the site's job is to feel like a serious, established local company you'd hand your home's electricity to, not a dropshipped storefront. The system is built on a single deep teal, one confident teal accent used everywhere action happens, and a warm copper reserved for the rare energy/solar moment. This is the second confirmed palette for this project: an earlier cyan/purple/pink mix gave way to a navy+blue system, which itself was replaced by this deep-teal+copper system after user feedback that the navy+blue combination felt not attractive. Both prior palettes are confirmed visual rejections. The page rhythm is a deliberate light/dark deck with a varied spacing cadence: the hero and final CTA run generous as high-weight peaks, the FAQ runs tighter as a dense list. Every section heading fuses a small icon badge directly with its H2, centered above the heading text - this replaced an earlier uppercase eyebrow label that sat as a separate line above every heading, now a confirmed rejection. Depth reads differently by background: light sections lean on soft, often colored box-shadows and glassmorphism; dark sections abandon shadows in favor of low-opacity radial glows. Motion is deliberately restrained: decorative floating-particle fields and meaningless icon pulses were removed; the hero is the one authored focal moment with a staggered, confident-deceleration entrance.",
+    "keyCharacteristics": [
+      "One dominant accent (teal) carries all interactive weight; copper is rationed to energy contexts only.",
+      "Alternating light/dark full-bleed sections with a deliberately varied spacing cadence, not one repeated interval.",
+      "Every section heading pairs an icon badge (centered above) with its H2 - no separate text label precedes a heading anywhere.",
+      "Display type (Space Grotesk, self-hosted) carries brand voice on headlines and stat numerals; body copy stays on Inter.",
+      "WhatsApp is the one conversion path; its buttons deliberately break the teal system for a green brand color, on purpose.",
+      "Motion is purposeful, not ambient: one authored hero entrance, meaningful state feedback, no decorative infinite loops."
+    ],
+    "rules": [
+      { "name": "The One-Hue Rule", "body": "All interactive color lives in Trust Teal. A new button, link, or icon does not get to introduce its own accent color; it uses --accent-blue (teal) or it uses copper because it is genuinely an energy/solar moment - there is no third option.", "section": "colors" },
+      { "name": "The WhatsApp Exception", "body": "Every WhatsApp-facing CTA uses the green-to-emerald gradient instead of the brand system. A non-WhatsApp action (e.g. a native phone dialer link) should not borrow the green either.", "section": "colors" },
+      { "name": "The Fused-Icon Rule", "body": "Every major content section pairs a small icon badge with its H2, icon centered above the heading, never a separate uppercase text line preceding it. Replaces the earlier eyebrow-label pattern, now a confirmed rejection.", "section": "typography" },
+      { "name": "The Alternating Deck Rule", "body": "No two adjacent full-bleed sections share the same light/dark treatment, and vertical rhythm varies deliberately (peaks at hero/CTA, tighter at the FAQ) rather than repeating one spacing value.", "section": "layout" },
+      { "name": "The Header-Scale Rule", "body": "A page header's brand lockup must fit on one to two lines at 375px width; scale logo and type down below the sm breakpoint.", "section": "layout" },
+      { "name": "The No-Shadow-On-Navy Rule", "body": "Never apply a box-shadow-based elevation to an element sitting directly on a bg-solar-section/primary-dark background expecting it to be visible - use a radial glow instead.", "section": "elevation" },
+      { "name": "The No-Decorative-Glass Rule", "body": ".glass-card and .neon-border were removed entirely - every usage sat on a flat or barely-textured background with nothing worth blurring, a confirmed AI-tell. Blur is legitimate only where something busy actually sits behind an element.", "section": "elevation" },
+      { "name": "The One-Gradient-Text Rule", "body": "Gradient-clip text was scattered across ~13 headings and is now used in exactly one place, the hero's 'Every Need'. Every other heading emphasis is solid text-accent-blue at full weight - size and color carry it, not a clip-text trick.", "section": "colors" },
+      { "name": "The Primary-Only Magnetic Rule", "body": "Pointer-attraction hover (useMagnetic) is reserved for the single highest-intent action in a given area - never applied to secondary/outline buttons, nav, or chat controls. It must not be combined with .hover-scale or hover:scale-* on the same element; the hook's inline transform wins the cascade and silently drops the other.", "section": "components" },
+      { "name": "The Scroll-Timeline Progressive-Enhancement Rule", "body": "The hero's ambient orbs drift and scale via animation-timeline: scroll(root) inside @supports (animation-timeline: scroll()). No JS scroll listener. Firefox and older browsers simply keep the orbs static.", "section": "motion" }
+    ],
+    "dos": [
+      "Do put every primary CTA through WhatsApp (wa.me/919901893191) with a prefilled, context-specific message.",
+      "Do pair every major section heading with an icon badge centered above it - never a separate text eyebrow.",
+      "Do alternate light/dark full-bleed section backgrounds with a varied spacing cadence rather than one repeated interval.",
+      "Do keep copper rationed to energy/solar contexts; it is a tertiary accent, not a second workhorse color.",
+      "Do use a colored glow instead of a shadow for any element sitting on a dark teal background.",
+      "Do reserve the springy hover-scale curve for small control feedback; use the confident no-overshoot curve for section- or panel-level entrances.",
+      "Do give a page header's brand lockup a smaller variant below sm: so it never wraps past two lines.",
+      "Do keep gradient-clip text to the one hero spot; everywhere else use solid color plus weight/size.",
+      "Do reserve the magnetic pointer-attraction effect for the single primary CTA in a given area."
+    ],
+    "donts": [
+      "Don't introduce a new hue family - the cyan/purple/pink mix and the navy+blue system this one replaced are both confirmed rejections.",
+      "Don't reintroduce a text eyebrow label above a heading - fuse an icon with the heading instead.",
+      "Don't add decorative, infinitely-looping motion (floating particles, pulsing icons/badges with no state meaning, a repeated SVG grid overlay) - all removed as visual debt.",
+      "Don't add or imply real customer testimonials, review counts, or certifications beyond the confirmed '18 years / 1500+ customers' figures - the current three homepage testimonials are explicitly-flagged placeholders.",
+      "Don't give WhatsApp buttons the teal treatment, or give a non-WhatsApp button the green treatment.",
+      "Don't add backdrop blur as decoration on a flat background - see The No-Decorative-Glass Rule.",
+      "Don't rebuild a repeated section as four-or-more identical icon+heading+text cards by reflex - check whether it's actually a sequence first.",
+      "Don't combine useMagnetic with .hover-scale or hover:scale-* on the same element."
+    ]
+  }
+}
