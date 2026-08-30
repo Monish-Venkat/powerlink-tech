@@ -18,8 +18,16 @@ const kinds: { id: DocumentKind; label: string; title: string }[] = [
 const today = () => new Date().toISOString().slice(0, 10);
 const newLine = (): Line => ({ description: '', hsn: '', quantity: 1, unit: 'Nos', rate: 0, gstRate: 18 });
 const defaultPaymentDetails = (): PaymentDetails => ({ bankName: 'Canara Bank', accountNumber: '125003168437', ifsc: 'CNRB0002727', branch: 'Sri Sathya Sai Hostel Branch' });
-const emptyPaymentDetails = (): PaymentDetails => defaultPaymentDetails();
-const savedPaymentDetails = (): PaymentDetails => { try { return { ...emptyPaymentDetails(), ...JSON.parse(localStorage.getItem('plt-invoice-payment-details') ?? '{}') }; } catch { return emptyPaymentDetails(); } };
+const withPaymentDefaults = (details: Partial<PaymentDetails> = {}): PaymentDetails => {
+  const fallback = defaultPaymentDetails();
+  return {
+    bankName: details.bankName?.trim() || fallback.bankName,
+    accountNumber: details.accountNumber?.trim() || fallback.accountNumber,
+    ifsc: details.ifsc?.trim() || fallback.ifsc,
+    branch: details.branch?.trim() || fallback.branch,
+  };
+};
+const savedPaymentDetails = (): PaymentDetails => { try { return withPaymentDefaults(JSON.parse(localStorage.getItem('plt-invoice-payment-details') ?? '{}')); } catch { return defaultPaymentDetails(); } };
 const defaults = (kind: DocumentKind): DocumentState => {
   const shared = { number: `PLT/${kind === 'invoice' ? 'INV' : 'QTN'}/001`, date: today(), ewayBill: '', validUntil: '', customer: '', address: '', gstin: '', contact: '', handledBy: 'Power Link Technologies', notes: 'Thank you for choosing Power Link Technologies.', terms: 'Prices are inclusive of applicable taxes unless stated otherwise. Delivery and installation scope will be confirmed before dispatch.', ...defaultPaymentDetails() };
   const preset = {
@@ -48,7 +56,7 @@ export default function Invoice() {
 
   useEffect(() => { localStorage.setItem(`plt-document-${kind}`, JSON.stringify(document)); }, [kind, document]);
   useEffect(() => { localStorage.setItem('plt-invoice-payment-details', JSON.stringify(paymentDetails)); }, [paymentDetails]);
-  useEffect(() => { if (isInvoice && [document.bankName, document.accountNumber, document.ifsc, document.branch].some(Boolean)) setPaymentDetails({ bankName: document.bankName, accountNumber: document.accountNumber, ifsc: document.ifsc, branch: document.branch }); }, [isInvoice, document.bankName, document.accountNumber, document.ifsc, document.branch]);
+  useEffect(() => { if (isInvoice) setPaymentDetails(withPaymentDefaults(document)); }, [isInvoice, document.bankName, document.accountNumber, document.ifsc, document.branch]);
   useEffect(() => { fetch('/api/invoice-session', { credentials: 'include' }).then(response => response.json()).then(data => setAuthenticated(Boolean(data.authenticated))).catch(() => setAuthenticated(false)).finally(() => setCheckingSession(false)); }, []);
   const setField = <K extends keyof DocumentState>(key: K, value: DocumentState[K]) => setDocument(old => ({ ...old, [key]: value }));
   const setLine = (index: number, key: keyof Line, value: string) => setDocument(old => ({ ...old, lines: old.lines.map((line, i) => i === index ? { ...line, [key]: ['description', 'hsn', 'unit'].includes(key) ? value : Math.max(0, Number(value)) } : line) }));
