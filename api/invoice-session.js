@@ -1,4 +1,4 @@
-import { hasValidSession } from './lib/session.js';
+import { hasValidSession } from './_lib/session.js';
 
 export default function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed.' });
