@@ -1,0 +1,18 @@
+@page { size: A4 portrait; margin: 9mm; }
+
+@media print {
+  html, body, #root { width: 100%; min-width: 0 !important; background: #fff !important; }
+  .invoice-sheet { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; }
+  .invoice-sheet * { box-sizing: border-box; }
+  .invoice-sheet input, .invoice-sheet textarea { min-height: 0 !important; padding: 0 !important; border: 0 !important; background: transparent !important; color: #111827 !important; resize: none !important; overflow: hidden !important; }
+  .invoice-sheet textarea { height: auto !important; }
+  .document-header, .document-party, .document-intro, .document-summary, .document-footer, .invoice-bank { break-inside: avoid; page-break-inside: avoid; }
+  .document-items { width: 100% !important; min-width: 0 !important; table-layout: fixed; }
+  .document-items thead { display: table-header-group; }
+  .document-items tr { break-inside: avoid; page-break-inside: avoid; }
+  .document-items th, .document-items td { padding: 3px !important; font-size: 8px !important; line-height: 1.25 !important; overflow-wrap: anywhere; }
+  .document-items input { width: 100% !important; font-size: 8px !important; }
+  .document-summary { margin-top: 14px !important; gap: 14px !important; }
+  .document-footer { margin-top: 16px !important; }
+  .document-footer img { height: 34px !important; width: 100px !important; }
+}
