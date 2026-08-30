@@ -781,7 +781,7 @@ const Index = () => {
               {
                 icon: MapPin,
                 title: 'Location',
-                value: 'Bangalore, Karnataka',
+                value: '#67/68, Papamma Layout, 4th Cross, DMart Road, Ramamurthy Nagar, Bangalore - 560016',
                 action: 'Tap to view on map',
                 href: 'https://maps.app.goo.gl/GAfCcJqLZTutJvi48',
                 external: true,

@@ -117,7 +117,7 @@ const Footer = () => {
                 </li>
                 <li className="flex items-start gap-3 text-primary-light/60">
                   <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 text-accent-blue" />
-                  Bangalore, Karnataka
+                  #67/68, Papamma Layout, 4th Cross, DMart Road, Ramamurthy Nagar, Bangalore - 560016
                 </li>
                 <li className="flex items-start gap-3 text-primary-light/60">
                   <Clock className="w-4 h-4 mt-0.5 flex-shrink-0 text-accent-blue" />
