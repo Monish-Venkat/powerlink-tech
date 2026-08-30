@@ -15,6 +15,4 @@
   .document-summary { margin-top: 14px !important; gap: 14px !important; }
   .document-footer { margin-top: 16px !important; }
   .document-footer img { height: 34px !important; width: 100px !important; }
-  .invoice-qr { width: 36mm !important; height: 36mm !important; min-height: 0 !important; align-self: start !important; }
-  .invoice-qr img { width: 100% !important; height: 100% !important; object-fit: contain !important; }
 }
