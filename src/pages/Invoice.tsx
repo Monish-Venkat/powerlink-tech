@@ -1417,7 +1417,7 @@ export default function Invoice() {
               {isInvoice && (
                 <div className="invoice-bottom-strip mt-3 text-center">
                   <p className="font-semibold">
-                    SUBJECT TO BANGALURU JURISDICTION
+                    SUBJECT TO BENGALURU JURISDICTION
                   </p>
 
                   <p>
