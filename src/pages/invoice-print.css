@@ -1,18 +1,233 @@
-@page { size: A4 portrait; margin: 5mm; }
+/* =========================================================
+   BASE
+   ========================================================= */
+
+.invoice-sheet {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.invoice-sheet input,
+.invoice-sheet textarea,
+.invoice-sheet button,
+.invoice-sheet table {
+  font-family: inherit;
+}
+
+
+/* =========================================================
+   MOBILE SCREEN
+   ========================================================= */
+
+@media screen and (max-width: 767px) {
+  .invoice-sheet {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 16px !important;
+    box-shadow: none !important;
+  }
+
+  .document-header {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+
+  .document-party {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+
+  .document-summary {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .document-footer {
+    grid-template-columns: 1fr !important;
+  }
+
+  .document-party > div:nth-child(2) {
+    border-left: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  .document-items {
+    min-width: 760px;
+  }
+}
+
+
+/* =========================================================
+   A4 PRINT
+   ========================================================= */
+
+@page {
+  size: A4 portrait;
+  margin: 10mm;
+}
 
 @media print {
-  html, body, #root { width: 100%; min-width: 0 !important; background: #fff !important; }
-  .invoice-sheet { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; zoom: 0.78; }
-  .invoice-sheet * { box-sizing: border-box; }
-  .invoice-sheet input, .invoice-sheet textarea { min-height: 0 !important; padding: 0 !important; border: 0 !important; background: transparent !important; color: #111827 !important; resize: none !important; overflow: hidden !important; }
-  .invoice-sheet textarea { height: auto !important; }
-  .document-header, .document-party, .document-intro, .document-summary, .document-footer, .invoice-bank { break-inside: avoid; page-break-inside: avoid; }
-  .document-items { width: 100% !important; min-width: 0 !important; table-layout: fixed; }
-  .document-items thead { display: table-header-group; }
-  .document-items tr { break-inside: avoid; page-break-inside: avoid; }
-  .document-items th, .document-items td { padding: 3px !important; font-size: 8px !important; line-height: 1.25 !important; overflow-wrap: anywhere; }
-  .document-items input { width: 100% !important; font-size: 8px !important; }
-  .document-summary { margin-top: 14px !important; gap: 14px !important; }
-  .document-footer { margin-top: 16px !important; }
-  .document-footer img { height: 34px !important; width: 100px !important; }
+  html,
+  body,
+  #root {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .invoice-sheet {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+
+    /*
+      Do not use zoom.
+      zoom was making the whole PDF + font smaller.
+    */
+    zoom: 1 !important;
+    transform: none !important;
+
+    font-family: Arial, Helvetica, sans-serif !important;
+  }
+
+  .invoice-sheet * {
+    box-sizing: border-box;
+  }
+
+  /*
+    Force desktop-style layout for PDF.
+
+    This is necessary because Tailwind's md: breakpoint
+    may not be active inside the browser print viewport.
+  */
+
+  .document-header {
+    display: grid !important;
+    grid-template-columns: 1.1fr 0.9fr !important;
+    gap: 24px !important;
+  }
+
+  .document-party {
+    display: grid !important;
+    grid-template-columns: 1.1fr 0.9fr !important;
+    gap: 20px !important;
+  }
+
+  .document-party > div:nth-child(2) {
+    border-left: 1px solid #fee2e2 !important;
+    padding-left: 20px !important;
+  }
+
+  .document-summary {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 290px !important;
+    gap: 24px !important;
+    margin-top: 28px !important;
+  }
+
+  .document-footer {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+    margin-top: 32px !important;
+  }
+
+  /*
+    Form controls
+  */
+
+  .invoice-sheet input,
+  .invoice-sheet textarea {
+    min-height: 0 !important;
+    background: transparent !important;
+    color: #111827 !important;
+    resize: none !important;
+    font-family: inherit !important;
+  }
+
+  .invoice-sheet textarea {
+    overflow: hidden !important;
+  }
+
+  /*
+    Important: don't remove borders from every input.
+    Only table/bank input borders need removing.
+  */
+
+  .document-items input,
+  .invoice-bank input {
+    border: 0 !important;
+    outline: 0 !important;
+  }
+
+  /*
+    Avoid splitting sections between pages
+  */
+
+  .document-header,
+  .document-party,
+  .document-intro,
+  .document-summary,
+  .document-footer,
+  .invoice-bank {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /*
+    Table
+  */
+
+  .document-items {
+    width: 100% !important;
+    min-width: 0 !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+  }
+
+  .document-items thead {
+    display: table-header-group;
+  }
+
+  .document-items tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .document-items th,
+  .document-items td {
+    padding: 5px !important;
+    font-size: 9.5px !important;
+    line-height: 1.3 !important;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  .document-items input {
+    width: 100% !important;
+    padding: 0 !important;
+    font-size: 9.5px !important;
+    line-height: 1.3 !important;
+  }
+
+  /*
+    Signature
+  */
+
+  .document-footer img {
+    width: 128px !important;
+    height: 48px !important;
+    object-fit: contain !important;
+  }
 }

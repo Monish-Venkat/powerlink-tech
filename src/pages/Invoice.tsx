@@ -1,84 +1,1321 @@
-import { Download, LockKeyhole, LogOut, Plus, Save, Trash2 } from 'lucide-react';
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import {
+  Download,
+  LockKeyhole,
+  LogOut,
+  Plus,
+  Save,
+  Trash2,
+} from 'lucide-react';
+import {
+  FormEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import './invoice-print.css';
 
 type DocumentKind = 'battery' | 'solar' | 'cctv' | 'invoice';
-type Line = { description: string; hsn: string; quantity: number; unit: string; rate: number; gstRate: number };
-type DocumentState = {
-  number: string; date: string; ewayBill: string; validUntil: string; customer: string; address: string; gstin: string; contact: string;
-  subject: string; introduction: string; notes: string; terms: string; handledBy: string; bankName: string; accountNumber: string; ifsc: string; branch: string; lines: Line[];
+
+type Line = {
+  description: string;
+  hsn: string;
+  quantity: number;
+  unit: string;
+  rate: number;
+  gstRate: number;
 };
-type PaymentDetails = Pick<DocumentState, 'bankName' | 'accountNumber' | 'ifsc' | 'branch'>;
+
+type DocumentState = {
+  number: string;
+  date: string;
+  ewayBill: string;
+  validUntil: string;
+  customer: string;
+  address: string;
+  gstin: string;
+  contact: string;
+  subject: string;
+  introduction: string;
+  notes: string;
+  terms: string;
+  handledBy: string;
+  bankName: string;
+  accountNumber: string;
+  ifsc: string;
+  branch: string;
+  lines: Line[];
+};
+
+type PaymentDetails = Pick<
+  DocumentState,
+  'bankName' | 'accountNumber' | 'ifsc' | 'branch'
+>;
 
 const OWNER_EMAIL = 'powerlink2008@gmail.com';
-const kinds: { id: DocumentKind; label: string; title: string }[] = [
-  { id: 'battery', label: 'Battery', title: 'Battery quotation' }, { id: 'solar', label: 'Solar', title: 'Solar quotation' },
-  { id: 'cctv', label: 'CCTV', title: 'CCTV quotation' }, { id: 'invoice', label: 'Tax invoice', title: 'Tax invoice' },
+
+const kinds: {
+  id: DocumentKind;
+  label: string;
+  title: string;
+}[] = [
+  {
+    id: 'battery',
+    label: 'Battery',
+    title: 'Battery quotation',
+  },
+  {
+    id: 'solar',
+    label: 'Solar',
+    title: 'Solar quotation',
+  },
+  {
+    id: 'cctv',
+    label: 'CCTV',
+    title: 'CCTV quotation',
+  },
+  {
+    id: 'invoice',
+    label: 'Tax invoice',
+    title: 'Tax invoice',
+  },
 ];
+
 const today = () => new Date().toISOString().slice(0, 10);
-const newLine = (): Line => ({ description: '', hsn: '', quantity: 1, unit: 'Nos', rate: 0, gstRate: 18 });
-const defaultPaymentDetails = (): PaymentDetails => ({ bankName: 'Canara Bank', accountNumber: '125003168437', ifsc: 'CNRB0002727', branch: 'Sri Sathya Sai Hostel Branch' });
-const withPaymentDefaults = (details: Partial<PaymentDetails> = {}): PaymentDetails => {
+
+const newLine = (): Line => ({
+  description: '',
+  hsn: '',
+  quantity: 1,
+  unit: 'Nos',
+  rate: 0,
+  gstRate: 18,
+});
+
+const defaultPaymentDetails = (): PaymentDetails => ({
+  bankName: 'Canara Bank',
+  accountNumber: '125003168437',
+  ifsc: 'CNRB0002727',
+  branch: 'Sri Sathya Sai Hostel Branch',
+});
+
+const withPaymentDefaults = (
+  details: Partial<PaymentDetails> = {},
+): PaymentDetails => {
   const fallback = defaultPaymentDetails();
+
   return {
     bankName: details.bankName?.trim() || fallback.bankName,
-    accountNumber: details.accountNumber?.trim() || fallback.accountNumber,
+    accountNumber:
+      details.accountNumber?.trim() || fallback.accountNumber,
     ifsc: details.ifsc?.trim() || fallback.ifsc,
     branch: details.branch?.trim() || fallback.branch,
   };
 };
-const savedPaymentDetails = (): PaymentDetails => { try { return withPaymentDefaults(JSON.parse(localStorage.getItem('plt-invoice-payment-details') ?? '{}')); } catch { return defaultPaymentDetails(); } };
-const defaults = (kind: DocumentKind): DocumentState => {
-  const shared = { number: `PLT/${kind === 'invoice' ? 'INV' : 'QTN'}/001`, date: today(), ewayBill: '', validUntil: '', customer: '', address: '', gstin: '', contact: '', handledBy: 'Power Link Technologies', notes: 'Thank you for choosing Power Link Technologies.', terms: 'Prices are inclusive of applicable taxes unless stated otherwise. Delivery and installation scope will be confirmed before dispatch.', ...defaultPaymentDetails() };
-  const preset = {
-    battery: { subject: 'Proposal for battery backup solution', introduction: 'We are pleased to submit our quotation for a reliable power-backup solution as discussed.', lines: [{ ...newLine(), description: 'Tubular battery' }, { ...newLine(), description: 'Battery installation and commissioning', unit: 'Job' }] },
-    solar: { subject: 'Proposal for solar power system', introduction: 'We are pleased to submit our proposal for a dependable solar solution designed for your requirement.', lines: [{ ...newLine(), description: 'Solar PV module', gstRate: 12 }, { ...newLine(), description: 'Solar inverter', gstRate: 12 }, { ...newLine(), description: 'Installation and commissioning', unit: 'Job' }] },
-    cctv: { subject: 'Proposal for CCTV surveillance system', introduction: 'We are pleased to submit our quotation for the following security and surveillance equipment.', lines: [{ ...newLine(), description: 'CCTV dome camera' }, { ...newLine(), description: 'DVR / NVR' }, { ...newLine(), description: 'Cabling and installation', unit: 'Job' }] },
-    invoice: { subject: '', introduction: '', lines: [{ ...newLine(), description: 'Power solution / supply and installation' }] },
-  }[kind];
-  return { ...shared, ...preset };
+
+const savedPaymentDetails = (): PaymentDetails => {
+  try {
+    return withPaymentDefaults(
+      JSON.parse(
+        localStorage.getItem(
+          'plt-invoice-payment-details',
+        ) ?? '{}',
+      ),
+    );
+  } catch {
+    return defaultPaymentDetails();
+  }
 };
-const money = (value: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(value);
-const lineAmount = (line: Line) => line.quantity * line.rate;
-const amountInWords = (value: number) => value === 0 ? 'Zero rupees only' : `${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(value)} rupees only`;
+
+const defaults = (
+  kind: DocumentKind,
+): DocumentState => {
+  const shared = {
+    number: `PLT/${
+      kind === 'invoice' ? 'INV' : 'QTN'
+    }/001`,
+    date: today(),
+    ewayBill: '',
+    validUntil: '',
+    customer: '',
+    address: '',
+    gstin: '',
+    contact: '',
+    handledBy: 'Power Link Technologies',
+    notes:
+      'Thank you for choosing Power Link Technologies.',
+    terms:
+      'Prices are exclusive of applicable GST unless stated otherwise. Delivery and installation scope will be confirmed before dispatch.',
+    ...defaultPaymentDetails(),
+  };
+
+  const preset = {
+    battery: {
+      subject:
+        'Proposal for battery backup solution',
+      introduction:
+        'We are pleased to submit our quotation for a reliable power-backup solution as discussed.',
+      lines: [
+        {
+          ...newLine(),
+          description: 'Tubular battery',
+        },
+        {
+          ...newLine(),
+          description:
+            'Battery installation and commissioning',
+          unit: 'Job',
+        },
+      ],
+    },
+
+    solar: {
+      subject:
+        'Proposal for solar power system',
+      introduction:
+        'We are pleased to submit our proposal for a dependable solar solution designed for your requirement.',
+      lines: [
+        {
+          ...newLine(),
+          description: 'Solar PV module',
+          gstRate: 12,
+        },
+        {
+          ...newLine(),
+          description: 'Solar inverter',
+          gstRate: 12,
+        },
+        {
+          ...newLine(),
+          description:
+            'Installation and commissioning',
+          unit: 'Job',
+        },
+      ],
+    },
+
+    cctv: {
+      subject:
+        'Proposal for CCTV surveillance system',
+      introduction:
+        'We are pleased to submit our quotation for the following security and surveillance equipment.',
+      lines: [
+        {
+          ...newLine(),
+          description: 'CCTV dome camera',
+        },
+        {
+          ...newLine(),
+          description: 'DVR / NVR',
+        },
+        {
+          ...newLine(),
+          description:
+            'Cabling and installation',
+          unit: 'Job',
+        },
+      ],
+    },
+
+    invoice: {
+      subject: '',
+      introduction: '',
+      lines: [
+        {
+          ...newLine(),
+          description:
+            'Power solution / supply and installation',
+        },
+      ],
+    },
+  }[kind];
+
+  return {
+    ...shared,
+    ...preset,
+  };
+};
+
+const money = (value: number) =>
+  new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 2,
+  }).format(value);
+
+const lineAmount = (line: Line) =>
+  line.quantity * line.rate;
+
+const amountInWords = (value: number) =>
+  value === 0
+    ? 'Zero rupees only'
+    : `${new Intl.NumberFormat('en-IN', {
+        maximumFractionDigits: 2,
+      }).format(value)} rupees only`;
 
 export default function Invoice() {
-  const [authenticated, setAuthenticated] = useState(false);
-  const [checkingSession, setCheckingSession] = useState(true);
+  const [authenticated, setAuthenticated] =
+    useState(false);
+
+  const [checkingSession, setCheckingSession] =
+    useState(true);
+
   const [error, setError] = useState('');
-  const [kind, setKind] = useState<DocumentKind>('battery');
-  const [document, setDocument] = useState<DocumentState>(() => { const saved = localStorage.getItem('plt-document-battery'); return saved ? { ...defaults('battery'), ...JSON.parse(saved) } : defaults('battery'); });
-  const [paymentDetails, setPaymentDetails] = useState<PaymentDetails>(savedPaymentDetails);
+
+  const [kind, setKind] =
+    useState<DocumentKind>('battery');
+
+  const [document, setDocument] =
+    useState<DocumentState>(() => {
+      const saved = localStorage.getItem(
+        'plt-document-battery',
+      );
+
+      return saved
+        ? {
+            ...defaults('battery'),
+            ...JSON.parse(saved),
+          }
+        : defaults('battery');
+    });
+
+  const [paymentDetails, setPaymentDetails] =
+    useState<PaymentDetails>(savedPaymentDetails);
+
   const isInvoice = kind === 'invoice';
-  const subtotal = useMemo(() => document.lines.reduce((sum, line) => sum + lineAmount(line), 0), [document.lines]);
-  const tax = useMemo(() => document.lines.reduce((sum, line) => sum + lineAmount(line) * line.gstRate / 100, 0), [document.lines]);
+
+  const subtotal = useMemo(
+    () =>
+      document.lines.reduce(
+        (sum, line) => sum + lineAmount(line),
+        0,
+      ),
+    [document.lines],
+  );
+
+  const tax = useMemo(
+    () =>
+      document.lines.reduce(
+        (sum, line) =>
+          sum +
+          (lineAmount(line) *
+            line.gstRate) /
+            100,
+        0,
+      ),
+    [document.lines],
+  );
+
   const total = subtotal + tax;
 
-  useEffect(() => { localStorage.setItem(`plt-document-${kind}`, JSON.stringify(document)); }, [kind, document]);
-  useEffect(() => { localStorage.setItem('plt-invoice-payment-details', JSON.stringify(paymentDetails)); }, [paymentDetails]);
-  useEffect(() => { if (isInvoice) setPaymentDetails(withPaymentDefaults(document)); }, [isInvoice, document.bankName, document.accountNumber, document.ifsc, document.branch]);
-  useEffect(() => { fetch('/api/invoice-session', { credentials: 'include' }).then(response => response.json()).then(data => setAuthenticated(Boolean(data.authenticated))).catch(() => setAuthenticated(false)).finally(() => setCheckingSession(false)); }, []);
-  const setField = <K extends keyof DocumentState>(key: K, value: DocumentState[K]) => setDocument(old => ({ ...old, [key]: value }));
-  const setLine = (index: number, key: keyof Line, value: string) => setDocument(old => ({ ...old, lines: old.lines.map((line, i) => i === index ? { ...line, [key]: ['description', 'hsn', 'unit'].includes(key) ? value : Math.max(0, Number(value)) } : line) }));
-  const setPaymentField = <K extends keyof PaymentDetails>(key: K, value: PaymentDetails[K]) => { setField(key, value); setPaymentDetails(old => ({ ...old, [key]: value })); };
-  const changeKind = (next: DocumentKind) => { const saved = localStorage.getItem(`plt-document-${next}`); const nextDocument = saved ? { ...defaults(next), ...JSON.parse(saved) } : defaults(next); setKind(next); setDocument(next === 'invoice' ? { ...nextDocument, ...paymentDetails } : nextDocument); };
-  const login = async (event: FormEvent) => { event.preventDefault(); setError(''); const form = new FormData(event.currentTarget); try { const response = await fetch('/api/invoice-login', { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: form.get('email'), password: form.get('password') }) }); const data = await response.json(); if (!response.ok) return setError(data.error ?? 'Unable to sign in.'); setAuthenticated(true); } catch { setError('Unable to reach the secure login service.'); } };
-  const logout = async () => { await fetch('/api/invoice-logout', { method: 'POST', credentials: 'include' }).catch(() => undefined); setAuthenticated(false); };
+  useEffect(() => {
+    localStorage.setItem(
+      `plt-document-${kind}`,
+      JSON.stringify(document),
+    );
+  }, [kind, document]);
 
-  if (checkingSession) return <main className="grid min-h-screen place-items-center bg-[#380707] px-4 font-sans text-stone-100"><p className="text-sm">Checking owner access…</p></main>;
-  if (!authenticated) return <main className="min-h-screen bg-[#380707] px-4 py-20 font-sans text-stone-100"><section className="mx-auto max-w-md border border-red-200/25 bg-[#550b0b] p-8 shadow-[0_24px_55px_rgba(0,0,0,.32)]"><div className="grid h-12 w-12 place-items-center bg-[#c51c1c] text-white"><LockKeyhole className="h-5 w-5" /></div><h1 className="mt-8 text-3xl font-semibold tracking-tight">Power Link documents</h1><p className="mt-3 text-sm leading-6 text-red-100">Private workspace for quotations, tax invoices, and PDF-ready documents.</p><form onSubmit={login} className="mt-8"><label className="block text-sm font-medium">Owner email<input readOnly required type="email" name="email" autoComplete="email" value={OWNER_EMAIL} className="mt-2 w-full border border-red-100/30 bg-white/10 px-3 py-3 text-red-50 outline-none" /></label><label className="mt-4 block text-sm font-medium">Password<input required type="password" name="password" autoComplete="current-password" autoFocus className="mt-2 w-full border border-red-100/30 bg-white/10 px-3 py-3 text-white outline-none transition focus:border-red-300" /></label>{error && <p className="mt-3 text-sm text-amber-200">{error}</p>}<button className="mt-6 w-full bg-[#c51c1c] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#a91515]">Sign in</button></form><a href="/" className="mt-5 block text-center text-sm text-red-100 hover:text-white">Back to website</a></section></main>;
+  useEffect(() => {
+    localStorage.setItem(
+      'plt-invoice-payment-details',
+      JSON.stringify(paymentDetails),
+    );
+  }, [paymentDetails]);
 
-  const title = kinds.find(item => item.id === kind)!.title;
-  return <main className="min-h-screen bg-[#f0eeee] font-sans text-slate-900 print:bg-white"><header className="border-b border-red-200 bg-white print:hidden"><div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-4"><a href="/" className="text-sm font-bold tracking-tight text-[#a91515]">POWER LINK TECHNOLOGIES</a><div className="flex items-center gap-2"><button onClick={logout} className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-950"><LogOut className="h-4 w-4" />Lock</button><button onClick={() => window.print()} className="inline-flex items-center gap-2 bg-[#b91c1c] px-4 py-2 text-sm font-semibold text-white hover:bg-[#991b1b]"><Download className="h-4 w-4" />Save as PDF</button></div></div></header>
-    <div className="mx-auto grid max-w-7xl gap-6 p-5 lg:grid-cols-[260px_minmax(0,1fr)] print:block print:p-0"><aside className="print:hidden"><div className="border border-red-200 bg-white p-3"><p className="px-2 pb-3 text-xs font-semibold uppercase tracking-[.16em] text-slate-500">Document format</p>{kinds.map(item => <button key={item.id} onClick={() => changeKind(item.id)} className={`block w-full px-3 py-3 text-left text-sm font-semibold transition ${kind === item.id ? 'bg-[#b91c1c] text-white' : 'text-slate-700 hover:bg-red-50'}`}>{item.label}</button>)}</div><div className="mt-4 border border-red-200 bg-white p-5"><p className="text-sm font-semibold">Your draft is saved here</p><p className="mt-2 text-sm leading-5 text-slate-600">Each format keeps its own editable draft on this device.</p><button onClick={() => setDocument(defaults(kind))} className="mt-5 text-sm font-semibold text-[#a91515] hover:underline">Start this format again</button></div></aside>
-      <div className="min-w-0"><div className="mb-5 flex items-center justify-between print:hidden"><h1 className="text-xl font-semibold tracking-tight">{title}</h1><span className="inline-flex items-center gap-2 text-sm text-[#7a3131]"><Save className="h-4 w-4" />Saved automatically</span></div><section className="invoice-sheet mx-auto max-w-5xl bg-white p-5 shadow-[0_18px_42px_rgba(69,10,10,.12)] sm:p-9 print:max-w-none print:p-0 print:shadow-none"><div className="border-t-[7px] border-[#b91c1c] pt-5"><header className="document-header grid gap-6 border-b-2 border-[#b91c1c] pb-5 md:grid-cols-[1.1fr_.9fr]"><div><div className="inline-grid h-11 w-11 place-items-center border-2 border-[#b91c1c] text-sm font-black text-[#b91c1c]">PLT</div><h2 className="mt-3 text-2xl font-bold tracking-tight text-[#b91c1c]">POWER LINK TECHNOLOGIES</h2><p className="mt-1 max-w-md text-xs leading-5 text-slate-600">#67/68, Papamma Layout, 4th Cross, DMart Road,<br />Ramamurthy Nagar, Bangalore - 560016 · 9901893191 · info@powerlinktechnologies.in</p></div><div className="border border-red-200 bg-red-50 p-4"><h3 className="text-center text-base font-bold uppercase tracking-wide text-[#991b1b]">{isInvoice ? 'Tax Invoice' : 'Quotation'}</h3><div className="mt-3 grid grid-cols-[98px_1fr] gap-y-2 text-xs"><span className="font-semibold">{isInvoice ? 'Invoice no.' : 'Reference no.'}</span><input value={document.number} onChange={e => setField('number', e.target.value)} className="min-w-0 border-b border-red-300 bg-transparent outline-none" /><span className="font-semibold">Date</span><input type="date" value={document.date} onChange={e => setField('date', e.target.value)} className="min-w-0 border-b border-red-300 bg-transparent outline-none" />{isInvoice && <><span className="font-semibold">E-way bill no.</span><input value={document.ewayBill} onChange={e => setField('ewayBill', e.target.value)} placeholder="Optional" className="min-w-0 border-b border-red-300 bg-transparent outline-none" /></>}{!isInvoice && <><span className="font-semibold">Valid until</span><input type="date" value={document.validUntil} onChange={e => setField('validUntil', e.target.value)} className="min-w-0 border-b border-red-300 bg-transparent outline-none" /><span className="font-semibold">Handled by</span><input value={document.handledBy} onChange={e => setField('handledBy', e.target.value)} className="min-w-0 border-b border-red-300 bg-transparent outline-none" /></>}</div></div></header>
-        <div className="document-party my-6 grid gap-5 md:grid-cols-[1.1fr_.9fr]"><div><p className="text-xs font-bold uppercase tracking-[.14em] text-[#991b1b]">{isInvoice ? 'Buyer (bill to)' : 'To'}</p><input value={document.customer} onChange={e => setField('customer', e.target.value)} placeholder="Customer / company name" className="mt-2 w-full border-b border-slate-400 py-1 text-lg font-bold outline-none placeholder:font-normal" /><textarea value={document.address} onChange={e => setField('address', e.target.value)} placeholder="Address" className="mt-2 min-h-20 w-full resize-none border-b border-slate-300 py-1 text-sm leading-5 outline-none" /></div><div className="md:border-l md:border-red-100 md:pl-5"><p className="text-xs font-bold uppercase tracking-[.14em] text-[#991b1b]">Customer details</p><input value={document.contact} onChange={e => setField('contact', e.target.value)} placeholder="Contact number / email" className="mt-2 w-full border-b border-slate-300 py-2 text-sm outline-none" /><input value={document.gstin} onChange={e => setField('gstin', e.target.value)} placeholder="GSTIN (optional)" className="mt-2 w-full border-b border-slate-300 py-2 text-sm outline-none" /></div></div>
-        {!isInvoice && <div className="document-intro mb-6"><input value={document.subject} onChange={e => setField('subject', e.target.value)} className="w-full border-b border-red-300 py-2 text-sm font-bold outline-none" /><textarea value={document.introduction} onChange={e => setField('introduction', e.target.value)} className="mt-3 min-h-14 w-full resize-none border-b border-slate-200 py-2 text-sm leading-6 text-slate-600 outline-none" /></div>}
-        <div className="overflow-x-auto print:overflow-visible"><table className="document-items w-full min-w-[760px] border-collapse text-left text-xs print:min-w-0"><thead className="bg-red-100 text-[#541010]"><tr><th className="w-10 border border-red-300 p-2">Sl.</th><th className="border border-red-300 p-2">Description of goods / service</th>{isInvoice && <th className="w-20 border border-red-300 p-2">HSN/SAC</th>}<th className="w-16 border border-red-300 p-2">GST</th><th className="w-16 border border-red-300 p-2">Qty</th><th className="w-14 border border-red-300 p-2">Unit</th><th className="w-24 border border-red-300 p-2">Rate</th><th className="w-28 border border-red-300 p-2 text-right">Amount</th><th className="w-8 border border-red-300 p-2 print:hidden"></th></tr></thead><tbody>{document.lines.map((line, index) => <tr key={index}><td className="border border-slate-300 p-2 align-top">{index + 1}</td><td className="border border-slate-300 p-1"><input value={line.description} onChange={e => setLine(index, 'description', e.target.value)} className="w-full bg-transparent p-1 outline-none" /></td>{isInvoice && <td className="border border-slate-300 p-1"><input value={line.hsn} onChange={e => setLine(index, 'hsn', e.target.value)} className="w-full bg-transparent p-1 outline-none" /></td>}<td className="border border-slate-300 p-1"><input min="0" type="number" value={line.gstRate} onChange={e => setLine(index, 'gstRate', e.target.value)} className="w-full bg-transparent p-1 outline-none" /></td><td className="border border-slate-300 p-1"><input min="0" type="number" value={line.quantity} onChange={e => setLine(index, 'quantity', e.target.value)} className="w-full bg-transparent p-1 outline-none" /></td><td className="border border-slate-300 p-1"><input value={line.unit} onChange={e => setLine(index, 'unit', e.target.value)} className="w-full bg-transparent p-1 outline-none" /></td><td className="border border-slate-300 p-1"><input min="0" type="number" value={line.rate} onChange={e => setLine(index, 'rate', e.target.value)} className="w-full bg-transparent p-1 outline-none" /></td><td className="border border-slate-300 p-2 text-right font-semibold">{money(lineAmount(line))}</td><td className="border border-slate-300 p-1 text-center print:hidden"><button disabled={document.lines.length === 1} onClick={() => setDocument(old => ({ ...old, lines: old.lines.filter((_, i) => i !== index) }))} className="text-red-400 hover:text-red-600 disabled:opacity-30"><Trash2 className="h-3.5 w-3.5" /></button></td></tr>)}</tbody></table></div>
-        <button onClick={() => setDocument(old => ({ ...old, lines: [...old.lines, newLine()] }))} className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[#a91515] hover:underline print:hidden"><Plus className="h-4 w-4" />Add line item</button>
-        <div className="document-summary mt-7 grid gap-6 md:grid-cols-[1fr_290px]"><div>{isInvoice && <div className="bank-tax-grid grid gap-4"><div className="border border-red-200"><p className="border-b border-red-200 bg-red-50 p-2 text-xs font-bold uppercase tracking-wide text-[#991b1b]">Tax analysis</p><div className="grid grid-cols-3 gap-2 p-3 text-xs"><span>Taxable value</span><span className="text-right">CGST + SGST</span><b className="text-right">{money(subtotal)}</b><span>GST payable</span><span className="text-right">Split equally for local supply</span><b className="text-right">{money(tax)}</b></div></div><div className="invoice-bank border border-red-200 p-3"><p className="text-xs font-bold uppercase tracking-wide text-[#991b1b]">Bank details</p><div className="mt-2 grid gap-2 text-xs"><input value={paymentDetails.bankName} onChange={e => setPaymentField('bankName', e.target.value)} placeholder="Bank name" className="border-b border-slate-300 py-1 outline-none" /><input value={paymentDetails.accountNumber} onChange={e => setPaymentField('accountNumber', e.target.value)} placeholder="Account number" className="border-b border-slate-300 py-1 outline-none" /><input value={paymentDetails.ifsc} onChange={e => setPaymentField('ifsc', e.target.value)} placeholder="IFSC code" className="border-b border-slate-300 py-1 outline-none" /><input value={paymentDetails.branch} onChange={e => setPaymentField('branch', e.target.value)} placeholder="Branch" className="border-b border-slate-300 py-1 outline-none" /></div></div></div>}<p className="mt-5 text-xs font-bold uppercase tracking-[.14em] text-[#991b1b]">Terms & conditions</p><textarea value={document.terms} onChange={e => setField('terms', e.target.value)} className="mt-2 min-h-20 w-full resize-none border border-slate-300 p-3 text-xs leading-5 outline-none" /></div><div className="border-t-2 border-[#b91c1c] pt-3 text-sm"><div className="flex justify-between"><span>Subtotal</span><b>{money(subtotal)}</b></div><div className="mt-2 flex justify-between"><span>GST</span><b>{money(tax)}</b></div><div className="mt-3 flex justify-between border-t border-slate-400 pt-3 text-lg font-bold text-[#991b1b]"><span>Total</span><span>{money(total)}</span></div></div></div>
-        {isInvoice && <p className="mt-4 border-y border-red-200 py-2 text-xs font-semibold">Amount chargeable (in words): {amountInWords(total)}</p>}
-        <footer className="document-footer mt-8 grid gap-6 border-t border-red-200 pt-5 text-xs text-slate-600 md:grid-cols-2"><div><p className="font-bold text-slate-800">Notes</p><textarea value={document.notes} onChange={e => setField('notes', e.target.value)} className="mt-2 min-h-14 w-full resize-none border-b border-slate-300 py-1 leading-5 outline-none" /></div><div className="self-end text-right"><p className="font-bold text-slate-800">for Power Link Technologies</p><img src="/brand/authorised-signature.png" alt="Authorised signature" className="ml-auto mt-2 h-12 w-32 object-contain object-right" /><div className="border-t border-slate-400 pt-2">Authorised signatory</div></div></footer>
-      </div></section></div></div>
-  </main>;
+  useEffect(() => {
+    if (isInvoice) {
+      setPaymentDetails(
+        withPaymentDefaults(document),
+      );
+    }
+  }, [
+    isInvoice,
+    document.bankName,
+    document.accountNumber,
+    document.ifsc,
+    document.branch,
+  ]);
+
+  useEffect(() => {
+    fetch('/api/invoice-session', {
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) =>
+        setAuthenticated(
+          Boolean(data.authenticated),
+        ),
+      )
+      .catch(() => setAuthenticated(false))
+      .finally(() =>
+        setCheckingSession(false),
+      );
+  }, []);
+
+  const setField = <
+    K extends keyof DocumentState,
+  >(
+    key: K,
+    value: DocumentState[K],
+  ) => {
+    setDocument((old) => ({
+      ...old,
+      [key]: value,
+    }));
+  };
+
+  const setLine = (
+    index: number,
+    key: keyof Line,
+    value: string,
+  ) => {
+    setDocument((old) => ({
+      ...old,
+      lines: old.lines.map((line, i) =>
+        i === index
+          ? {
+              ...line,
+              [key]: [
+                'description',
+                'hsn',
+                'unit',
+              ].includes(key)
+                ? value
+                : Math.max(
+                    0,
+                    Number(value),
+                  ),
+            }
+          : line,
+      ),
+    }));
+  };
+
+  const setPaymentField = <
+    K extends keyof PaymentDetails,
+  >(
+    key: K,
+    value: PaymentDetails[K],
+  ) => {
+    setField(key, value);
+
+    setPaymentDetails((old) => ({
+      ...old,
+      [key]: value,
+    }));
+  };
+
+  const changeKind = (
+    next: DocumentKind,
+  ) => {
+    const saved = localStorage.getItem(
+      `plt-document-${next}`,
+    );
+
+    const nextDocument = saved
+      ? {
+          ...defaults(next),
+          ...JSON.parse(saved),
+        }
+      : defaults(next);
+
+    setKind(next);
+
+    setDocument(
+      next === 'invoice'
+        ? {
+            ...nextDocument,
+            ...paymentDetails,
+          }
+        : nextDocument,
+    );
+  };
+
+ const login = async (event: FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
+  setError('');
+
+  const form = new FormData(event.currentTarget);
+
+  try {
+    const response = await fetch('/api/invoice-login', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: form.get('email'),
+        password: form.get('password'),
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setError(data.error ?? 'Unable to sign in.');
+      return;
+    }
+
+    setAuthenticated(true);
+  } catch {
+    setError('Unable to reach the secure login service.');
+  }
+};
+
+  const logout = async () => {
+    await fetch('/api/invoice-logout', {
+      method: 'POST',
+      credentials: 'include',
+    }).catch(() => undefined);
+
+    setAuthenticated(false);
+  };
+
+  if (checkingSession) {
+    return (
+      <main className="grid min-h-screen place-items-center bg-[#380707] px-4 font-sans text-stone-100">
+        <p className="text-sm">
+          Checking owner access…
+        </p>
+      </main>
+    );
+  }
+
+  if (!authenticated) {
+    return (
+      <main className="min-h-screen bg-[#380707] px-4 py-20 font-sans text-stone-100">
+        <section className="mx-auto max-w-md border border-red-200/25 bg-[#550b0b] p-8 shadow-[0_24px_55px_rgba(0,0,0,.32)]">
+          <div className="grid h-12 w-12 place-items-center bg-[#c51c1c] text-white">
+            <LockKeyhole className="h-5 w-5" />
+          </div>
+
+          <h1 className="mt-8 text-3xl font-semibold tracking-tight">
+            Power Link documents
+          </h1>
+
+          <p className="mt-3 text-sm leading-6 text-red-100">
+            Private workspace for
+            quotations, tax invoices,
+            and PDF-ready documents.
+          </p>
+
+          <form
+            onSubmit={login}
+            className="mt-8"
+          >
+            <label className="block text-sm font-medium">
+              Owner email
+
+              <input
+                readOnly
+                required
+                type="email"
+                name="email"
+                autoComplete="email"
+                value={OWNER_EMAIL}
+                className="mt-2 w-full border border-red-100/30 bg-white/10 px-3 py-3 text-red-50 outline-none"
+              />
+            </label>
+
+            <label className="mt-4 block text-sm font-medium">
+              Password
+
+              <input
+                required
+                type="password"
+                name="password"
+                autoComplete="current-password"
+                autoFocus
+                className="mt-2 w-full border border-red-100/30 bg-white/10 px-3 py-3 text-white outline-none transition focus:border-red-300"
+              />
+            </label>
+
+            {error && (
+              <p className="mt-3 text-sm text-amber-200">
+                {error}
+              </p>
+            )}
+
+            <button className="mt-6 w-full bg-[#c51c1c] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#a91515]">
+              Sign in
+            </button>
+          </form>
+
+          <a
+            href="/"
+            className="mt-5 block text-center text-sm text-red-100 hover:text-white"
+          >
+            Back to website
+          </a>
+        </section>
+      </main>
+    );
+  }
+
+  const title =
+    kinds.find(
+      (item) => item.id === kind,
+    )!.title;
+
+  return (
+    <main className="min-h-screen bg-[#f0eeee] font-sans text-slate-900 print:bg-white">
+      <header className="border-b border-red-200 bg-white print:hidden">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-5">
+          <a
+            href="/"
+            className="text-sm font-bold tracking-tight text-[#a91515]"
+          >
+            POWER LINK TECHNOLOGIES
+          </a>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={logout}
+              className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-950"
+            >
+              <LogOut className="h-4 w-4" />
+              Lock
+            </button>
+
+            <button
+              onClick={() =>
+                window.print()
+              }
+              className="inline-flex items-center gap-2 bg-[#b91c1c] px-3 py-2 text-sm font-semibold text-white hover:bg-[#991b1b] sm:px-4"
+            >
+              <Download className="h-4 w-4" />
+              Save as PDF
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="mx-auto grid max-w-7xl gap-4 p-2 sm:p-4 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-6 lg:p-5 print:block print:p-0">
+        <aside className="print:hidden">
+          <div className="border border-red-200 bg-white p-3">
+            <p className="px-2 pb-3 text-xs font-semibold uppercase tracking-[.16em] text-slate-500">
+              Document format
+            </p>
+
+            {kinds.map((item) => (
+              <button
+                key={item.id}
+                onClick={() =>
+                  changeKind(item.id)
+                }
+                className={`block w-full px-3 py-3 text-left text-sm font-semibold transition ${
+                  kind === item.id
+                    ? 'bg-[#b91c1c] text-white'
+                    : 'text-slate-700 hover:bg-red-50'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-4 border border-red-200 bg-white p-5">
+            <p className="text-sm font-semibold">
+              Your draft is saved here
+            </p>
+
+            <p className="mt-2 text-sm leading-5 text-slate-600">
+              Each format keeps its own
+              editable draft on this
+              device.
+            </p>
+
+            <button
+              onClick={() =>
+                setDocument(
+                  defaults(kind),
+                )
+              }
+              className="mt-5 text-sm font-semibold text-[#a91515] hover:underline"
+            >
+              Start this format again
+            </button>
+          </div>
+        </aside>
+
+        <div className="min-w-0">
+          <div className="mb-4 flex flex-col gap-1 sm:mb-5 sm:flex-row sm:items-center sm:justify-between print:hidden">
+            <h1 className="text-xl font-semibold tracking-tight">
+              {title}
+            </h1>
+
+            <span className="inline-flex items-center gap-2 text-sm text-[#7a3131]">
+              <Save className="h-4 w-4" />
+              Saved automatically
+            </span>
+          </div>
+
+          <section className="invoice-sheet mx-auto w-full max-w-5xl bg-white p-4 shadow-[0_18px_42px_rgba(69,10,10,.12)] sm:p-6 md:p-9 print:max-w-none print:p-0 print:shadow-none">
+            <div className="border-t-[7px] border-[#b91c1c] pt-5">
+
+              <header className="document-header grid gap-6 border-b-2 border-[#b91c1c] pb-5 md:grid-cols-[1.1fr_.9fr]">
+                <div>
+                  <div className="inline-grid h-11 w-11 place-items-center border-2 border-[#b91c1c] text-sm font-black text-[#b91c1c]">
+                    PLT
+                  </div>
+
+                  <h2 className="mt-3 text-2xl font-bold tracking-tight text-[#b91c1c]">
+                    POWER LINK TECHNOLOGIES
+                  </h2>
+
+                  <p className="mt-1 max-w-md text-xs leading-5 text-slate-600">
+                    #67/68, Papamma Layout,
+                    4th Cross, DMart Road,
+                    <br />
+                    Ramamurthy Nagar,
+                    Bangalore - 560016 ·
+                    9901893191 ·
+                    info@powerlinktechnologies.in
+                  </p>
+                </div>
+
+                <div className="border border-red-200 bg-red-50 p-4">
+                  <h3 className="text-center text-base font-bold uppercase tracking-wide text-[#991b1b]">
+                    {isInvoice
+                      ? 'Tax Invoice'
+                      : 'Quotation'}
+                  </h3>
+
+                  <div className="mt-3 grid grid-cols-[98px_1fr] gap-y-2 text-xs">
+                    <span className="font-semibold">
+                      {isInvoice
+                        ? 'Invoice no.'
+                        : 'Reference no.'}
+                    </span>
+
+                    <input
+                      value={
+                        document.number
+                      }
+                      onChange={(e) =>
+                        setField(
+                          'number',
+                          e.target.value,
+                        )
+                      }
+                      className="min-w-0 border-b border-red-300 bg-transparent outline-none"
+                    />
+
+                    <span className="font-semibold">
+                      Date
+                    </span>
+
+                    <input
+                      type="date"
+                      value={document.date}
+                      onChange={(e) =>
+                        setField(
+                          'date',
+                          e.target.value,
+                        )
+                      }
+                      className="min-w-0 border-b border-red-300 bg-transparent outline-none"
+                    />
+
+                    {isInvoice && (
+                      <>
+                        <span className="font-semibold">
+                          E-way bill no.
+                        </span>
+
+                        <input
+                          value={
+                            document.ewayBill
+                          }
+                          onChange={(e) =>
+                            setField(
+                              'ewayBill',
+                              e.target.value,
+                            )
+                          }
+                          placeholder="Optional"
+                          className="min-w-0 border-b border-red-300 bg-transparent outline-none"
+                        />
+                      </>
+                    )}
+
+                    {!isInvoice && (
+                      <>
+                        <span className="font-semibold">
+                          Valid until
+                        </span>
+
+                        <input
+                          type="date"
+                          value={
+                            document.validUntil
+                          }
+                          onChange={(e) =>
+                            setField(
+                              'validUntil',
+                              e.target.value,
+                            )
+                          }
+                          className="min-w-0 border-b border-red-300 bg-transparent outline-none"
+                        />
+
+                        <span className="font-semibold">
+                          Handled by
+                        </span>
+
+                        <input
+                          value={
+                            document.handledBy
+                          }
+                          onChange={(e) =>
+                            setField(
+                              'handledBy',
+                              e.target.value,
+                            )
+                          }
+                          className="min-w-0 border-b border-red-300 bg-transparent outline-none"
+                        />
+                      </>
+                    )}
+                  </div>
+                </div>
+              </header>
+
+              <div className="document-party my-6 grid gap-5 md:grid-cols-[1.1fr_.9fr]">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[.14em] text-[#991b1b]">
+                    {isInvoice
+                      ? 'Buyer (bill to)'
+                      : 'To'}
+                  </p>
+
+                  <input
+                    value={
+                      document.customer
+                    }
+                    onChange={(e) =>
+                      setField(
+                        'customer',
+                        e.target.value,
+                      )
+                    }
+                    placeholder="Customer / company name"
+                    className="mt-2 w-full border-b border-slate-400 py-1 text-lg font-bold outline-none placeholder:font-normal"
+                  />
+
+                  <textarea
+                    value={
+                      document.address
+                    }
+                    onChange={(e) =>
+                      setField(
+                        'address',
+                        e.target.value,
+                      )
+                    }
+                    placeholder="Address"
+                    className="mt-2 min-h-20 w-full resize-none border-b border-slate-300 py-1 text-sm leading-5 outline-none"
+                  />
+                </div>
+
+                <div className="md:border-l md:border-red-100 md:pl-5">
+                  <p className="text-xs font-bold uppercase tracking-[.14em] text-[#991b1b]">
+                    Customer details
+                  </p>
+
+                  <input
+                    value={
+                      document.contact
+                    }
+                    onChange={(e) =>
+                      setField(
+                        'contact',
+                        e.target.value,
+                      )
+                    }
+                    placeholder="Contact number / email"
+                    className="mt-2 w-full border-b border-slate-300 py-2 text-sm outline-none"
+                  />
+
+                  <input
+                    value={
+                      document.gstin
+                    }
+                    onChange={(e) =>
+                      setField(
+                        'gstin',
+                        e.target.value,
+                      )
+                    }
+                    placeholder="GSTIN (optional)"
+                    className="mt-2 w-full border-b border-slate-300 py-2 text-sm outline-none"
+                  />
+                </div>
+              </div>
+
+              {!isInvoice && (
+                <div className="document-intro mb-6">
+                  <input
+                    value={
+                      document.subject
+                    }
+                    onChange={(e) =>
+                      setField(
+                        'subject',
+                        e.target.value,
+                      )
+                    }
+                    className="w-full border-b border-red-300 py-2 text-sm font-bold outline-none"
+                  />
+
+                  <textarea
+                    value={
+                      document.introduction
+                    }
+                    onChange={(e) =>
+                      setField(
+                        'introduction',
+                        e.target.value,
+                      )
+                    }
+                    className="mt-3 min-h-14 w-full resize-none border-b border-slate-200 py-2 text-sm leading-6 text-slate-600 outline-none"
+                  />
+                </div>
+              )}
+
+              <div className="overflow-x-auto print:overflow-visible">
+                <table className="document-items w-full min-w-[760px] border-collapse text-left text-xs print:min-w-0">
+                  <thead className="bg-red-100 text-[#541010]">
+                    <tr>
+                      <th className="w-10 border border-red-300 p-2">
+                        Sl.
+                      </th>
+
+                      <th className="border border-red-300 p-2">
+                        Description of goods /
+                        service
+                      </th>
+
+                      {isInvoice && (
+                        <th className="w-20 border border-red-300 p-2">
+                          HSN/SAC
+                        </th>
+                      )}
+
+                      <th className="w-16 border border-red-300 p-2">
+                        GST
+                      </th>
+
+                      <th className="w-16 border border-red-300 p-2">
+                        Qty
+                      </th>
+
+                      <th className="w-14 border border-red-300 p-2">
+                        Unit
+                      </th>
+
+                      <th className="w-24 border border-red-300 p-2">
+                        Rate
+                      </th>
+
+                      <th className="w-28 border border-red-300 p-2 text-right">
+                        Amount
+                      </th>
+
+                      <th className="w-8 border border-red-300 p-2 print:hidden" />
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {document.lines.map(
+                      (line, index) => (
+                        <tr key={index}>
+                          <td className="border border-slate-300 p-2 align-top">
+                            {index + 1}
+                          </td>
+
+                          <td className="border border-slate-300 p-1">
+                            <input
+                              value={
+                                line.description
+                              }
+                              onChange={(e) =>
+                                setLine(
+                                  index,
+                                  'description',
+                                  e.target
+                                    .value,
+                                )
+                              }
+                              className="w-full bg-transparent p-1 outline-none"
+                            />
+                          </td>
+
+                          {isInvoice && (
+                            <td className="border border-slate-300 p-1">
+                              <input
+                                value={
+                                  line.hsn
+                                }
+                                onChange={(
+                                  e,
+                                ) =>
+                                  setLine(
+                                    index,
+                                    'hsn',
+                                    e.target
+                                      .value,
+                                  )
+                                }
+                                className="w-full bg-transparent p-1 outline-none"
+                              />
+                            </td>
+                          )}
+
+                          <td className="border border-slate-300 p-1">
+                            <input
+                              min="0"
+                              type="number"
+                              value={
+                                line.gstRate
+                              }
+                              onChange={(e) =>
+                                setLine(
+                                  index,
+                                  'gstRate',
+                                  e.target
+                                    .value,
+                                )
+                              }
+                              className="w-full bg-transparent p-1 outline-none"
+                            />
+                          </td>
+
+                          <td className="border border-slate-300 p-1">
+                            <input
+                              min="0"
+                              type="number"
+                              value={
+                                line.quantity
+                              }
+                              onChange={(e) =>
+                                setLine(
+                                  index,
+                                  'quantity',
+                                  e.target
+                                    .value,
+                                )
+                              }
+                              className="w-full bg-transparent p-1 outline-none"
+                            />
+                          </td>
+
+                          <td className="border border-slate-300 p-1">
+                            <input
+                              value={
+                                line.unit
+                              }
+                              onChange={(e) =>
+                                setLine(
+                                  index,
+                                  'unit',
+                                  e.target
+                                    .value,
+                                )
+                              }
+                              className="w-full bg-transparent p-1 outline-none"
+                            />
+                          </td>
+
+                          <td className="border border-slate-300 p-1">
+                            <input
+                              min="0"
+                              type="number"
+                              value={
+                                line.rate
+                              }
+                              onChange={(e) =>
+                                setLine(
+                                  index,
+                                  'rate',
+                                  e.target
+                                    .value,
+                                )
+                              }
+                              className="w-full bg-transparent p-1 outline-none"
+                            />
+                          </td>
+
+                          <td className="border border-slate-300 p-2 text-right font-semibold">
+                            {money(
+                              lineAmount(
+                                line,
+                              ),
+                            )}
+                          </td>
+
+                          <td className="border border-slate-300 p-1 text-center print:hidden">
+                            <button
+                              disabled={
+                                document
+                                  .lines
+                                  .length === 1
+                              }
+                              onClick={() =>
+                                setDocument(
+                                  (
+                                    old,
+                                  ) => ({
+                                    ...old,
+                                    lines:
+                                      old.lines.filter(
+                                        (
+                                          _,
+                                          i,
+                                        ) =>
+                                          i !==
+                                          index,
+                                      ),
+                                  }),
+                                )
+                              }
+                              className="text-red-400 hover:text-red-600 disabled:opacity-30"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </td>
+                        </tr>
+                      ),
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              <button
+                onClick={() =>
+                  setDocument((old) => ({
+                    ...old,
+                    lines: [
+                      ...old.lines,
+                      newLine(),
+                    ],
+                  }))
+                }
+                className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[#a91515] hover:underline print:hidden"
+              >
+                <Plus className="h-4 w-4" />
+                Add line item
+              </button>
+
+              <div className="document-summary mt-7 grid gap-6 md:grid-cols-[1fr_290px]">
+                <div>
+                  {isInvoice && (
+                    <div className="bank-tax-grid grid gap-4">
+                      <div className="border border-red-200">
+                        <p className="border-b border-red-200 bg-red-50 p-2 text-xs font-bold uppercase tracking-wide text-[#991b1b]">
+                          Tax analysis
+                        </p>
+
+                        <div className="grid grid-cols-3 gap-2 p-3 text-xs">
+                          <span>
+                            Taxable value
+                          </span>
+
+                          <span className="text-right">
+                            CGST + SGST
+                          </span>
+
+                          <b className="text-right">
+                            {money(
+                              subtotal,
+                            )}
+                          </b>
+
+                          <span>
+                            GST payable
+                          </span>
+
+                          <span className="text-right">
+                            Split equally for
+                            local supply
+                          </span>
+
+                          <b className="text-right">
+                            {money(tax)}
+                          </b>
+                        </div>
+                      </div>
+
+                      <div className="invoice-bank border border-red-200 p-3">
+                        <p className="text-xs font-bold uppercase tracking-wide text-[#991b1b]">
+                          Bank details
+                        </p>
+
+                        <div className="mt-2 grid gap-2 text-xs">
+                          <input
+                            value={
+                              paymentDetails.bankName
+                            }
+                            onChange={(e) =>
+                              setPaymentField(
+                                'bankName',
+                                e.target
+                                  .value,
+                              )
+                            }
+                            placeholder="Bank name"
+                            className="border-b border-slate-300 py-1 outline-none"
+                          />
+
+                          <input
+                            value={
+                              paymentDetails.accountNumber
+                            }
+                            onChange={(e) =>
+                              setPaymentField(
+                                'accountNumber',
+                                e.target
+                                  .value,
+                              )
+                            }
+                            placeholder="Account number"
+                            className="border-b border-slate-300 py-1 outline-none"
+                          />
+
+                          <input
+                            value={
+                              paymentDetails.ifsc
+                            }
+                            onChange={(e) =>
+                              setPaymentField(
+                                'ifsc',
+                                e.target
+                                  .value,
+                              )
+                            }
+                            placeholder="IFSC code"
+                            className="border-b border-slate-300 py-1 outline-none"
+                          />
+
+                          <input
+                            value={
+                              paymentDetails.branch
+                            }
+                            onChange={(e) =>
+                              setPaymentField(
+                                'branch',
+                                e.target
+                                  .value,
+                              )
+                            }
+                            placeholder="Branch"
+                            className="border-b border-slate-300 py-1 outline-none"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <p className="mt-5 text-xs font-bold uppercase tracking-[.14em] text-[#991b1b]">
+                    Terms & conditions
+                  </p>
+
+                  <textarea
+                    value={
+                      document.terms
+                    }
+                    onChange={(e) =>
+                      setField(
+                        'terms',
+                        e.target.value,
+                      )
+                    }
+                    className="mt-2 min-h-20 w-full resize-none border border-slate-300 p-3 text-xs leading-5 outline-none"
+                  />
+                </div>
+
+                <div className="border-t-2 border-[#b91c1c] pt-3 text-sm">
+                  <div className="flex justify-between">
+                    <span>
+                      Subtotal
+                    </span>
+
+                    <b>
+                      {money(subtotal)}
+                    </b>
+                  </div>
+
+                  <div className="mt-2 flex justify-between">
+                    <span>
+                      GST
+                    </span>
+
+                    <b>
+                      {money(tax)}
+                    </b>
+                  </div>
+
+                  <div className="mt-3 flex justify-between border-t border-slate-400 pt-3 text-lg font-bold text-[#991b1b]">
+                    <span>
+                      Total
+                    </span>
+
+                    <span>
+                      {money(total)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {isInvoice && (
+                <p className="mt-4 border-y border-red-200 py-2 text-xs font-semibold">
+                  Amount chargeable (in
+                  words):{' '}
+                  {amountInWords(total)}
+                </p>
+              )}
+
+              <footer className="document-footer mt-8 grid gap-6 border-t border-red-200 pt-5 text-xs text-slate-600 md:grid-cols-2">
+                <div>
+                  <p className="font-bold text-slate-800">
+                    Notes
+                  </p>
+
+                  <textarea
+                    value={
+                      document.notes
+                    }
+                    onChange={(e) =>
+                      setField(
+                        'notes',
+                        e.target.value,
+                      )
+                    }
+                    className="mt-2 min-h-14 w-full resize-none border-b border-slate-300 py-1 leading-5 outline-none"
+                  />
+                </div>
+
+                <div className="self-end text-right">
+                  <p className="font-bold text-slate-800">
+                    for Power Link
+                    Technologies
+                  </p>
+
+                  <img
+                    src="/brand/authorised-signature.png"
+                    alt="Authorised signature"
+                    className="ml-auto mt-2 h-12 w-32 object-contain object-right"
+                  />
+
+                  <div className="border-t border-slate-400 pt-2">
+                    Authorised signatory
+                  </div>
+                </div>
+              </footer>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  );
 }
